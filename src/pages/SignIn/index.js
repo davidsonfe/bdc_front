@@ -67,7 +67,8 @@ export default function SignIn(){
             {errors.password && <Text style={styles.labelError}>{errors.password?.message}</Text>}
 
             <TouchableOpacity style={styles.button}
-            onPress={ handleSubmit(handleSignIn)}>
+            // onPress={ handleSubmit(handleSignIn)}>
+            onPress={ () => navigation.navigate('Home')}>
               <Text style={styles.buttonText}>Acessar</Text>
             </TouchableOpacity>
 

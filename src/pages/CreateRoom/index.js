@@ -1,45 +1,36 @@
 import React from 'react'
 import { View, Text, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
+import { useNavigation } from '@react-navigation/native';
 
 import * as Animatable from 'react-native-animatable'
 
-export default function Registration(){
+export default function CreateRoom(){
+  const navigation = useNavigation();
   return (
       <View style={styles.container}>
           <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
-            <Text style={styles.message}>Cadastre-se</Text>
+            <Text style={styles.message}>Criar Sala</Text>
           </Animatable.View>
 
 
           <Animatable.View animation="fadeInUp" style={styles.containerForm} >
 
-          <Text style={styles.title}>Nome</Text>
+          <Text style={styles.title}>Nome da Sala</Text>
             <TextInput
-            placeholder="Digite um Nome..."
+            placeholder="Digite um Nome da Sala..."
             style={styles.input}
             />
 
-            <Text style={styles.title}>Email</Text>
+            <Text style={styles.title}>Perímetro Permitido <Text style={styles.titleSub}>(m)</Text></Text>
             <TextInput
-            placeholder="Digite um email..."
+            keyboardType='numeric'
+            placeholder="Digite o Perímetro..."
             style={styles.input}
             />
 
-
-            <Text style={styles.title}>Telefone</Text>
-            <TextInput
-            placeholder="Digite Seu Telefone..."
-            style={styles.input}
-            />
-
-            <Text style={styles.title}>Senha</Text>
-            <TextInput
-            placeholder="Digite sua senha..."
-            style={styles.input}
-            />
-
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Cadastrar</Text>
+            <TouchableOpacity style={styles.button}
+              onPress={ () => navigation.navigate('Room') }>
+                <Text style={styles.buttonText}>Criar Sala</Text>
             </TouchableOpacity>
 
           </Animatable.View>
@@ -106,6 +97,9 @@ const styles = StyleSheet.create({
   },
   registerText:{
     color: '#a1a1a1'
+  },
+  titleSub: {
+    fontSize: 14,
   }
 
 })
