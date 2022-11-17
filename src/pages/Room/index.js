@@ -11,7 +11,7 @@ export default function Room(){
       <View style={styles.container}>
           <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
             <Text style={styles.message}>
-              Calourada IFPE 
+              Calourada IFPE
               <Text style={styles.titleSub}> (50m)</Text>
             </Text>
             <TouchableOpacity>
@@ -31,7 +31,7 @@ export default function Room(){
             <View style={styleModal.centeredView}>
               <View style={styleModal.modalView}>
               <QRCode
-                value="http://awesome.link.qr"
+                value="http://awesome.link.ddszqr"
                 size={300}
               />
                 <TouchableOpacity>
@@ -43,8 +43,8 @@ export default function Room(){
 
 
           <Animatable.View animation="fadeInUp" style={styles.containerForm} >
-          
-            
+
+
           </Animatable.View>
 
       </View>

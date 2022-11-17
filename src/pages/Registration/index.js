@@ -1,9 +1,40 @@
 import React from 'react'
 import { View, Text, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
-
+import {useState} from 'react'
 import * as Animatable from 'react-native-animatable'
 
+import api from "../../services/api";
+
 export default function Registration(){
+
+  React.useEffect(() => {
+
+    api.get("usuarios").then((response) => {
+      console.log(response.data);
+    }).catch((error) => {console.log(error)});
+
+  }, []);
+
+
+  const [nome,setNome]=useState("")
+  const [email,setEmail]=useState("")
+  const [telefone,setTelefone]=useState("")
+  const [senha,setSenha]=useState("")
+
+
+
+
+
+  const handlerPost = async () => {
+    await api
+      .post("usuarios", {
+        nome,
+        email,
+        telefone,
+        senha})
+  };
+
+
   return (
       <View style={styles.container}>
           <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
@@ -17,12 +48,16 @@ export default function Registration(){
             <TextInput
             placeholder="Digite um Nome..."
             style={styles.input}
+            value={nome}
+            onChangeText={setNome}
             />
 
             <Text style={styles.title}>Email</Text>
             <TextInput
             placeholder="Digite um email..."
             style={styles.input}
+            value={email}
+            onChangeText={setEmail}
             />
 
 
@@ -30,15 +65,19 @@ export default function Registration(){
             <TextInput
             placeholder="Digite Seu Telefone..."
             style={styles.input}
+            value={telefone}
+            onChangeText={setTelefone}
             />
 
             <Text style={styles.title}>Senha</Text>
             <TextInput
             placeholder="Digite sua senha..."
             style={styles.input}
+            value={senha}
+            onChangeText={setSenha}
             />
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => handlerPost()}>
               <Text style={styles.buttonText}>Cadastrar</Text>
             </TouchableOpacity>
 
