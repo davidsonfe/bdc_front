@@ -75,7 +75,7 @@ export default function SignIn(){
             <TouchableOpacity
             style={styles.buttonRegister}
             onPress={ () => navigation.navigate('Registration') }>
-              <Text style={styles.registerText}>Não possui uma conta? Cadastre-se</Text>
+              <Text style={styles.registerText}>Não possui uma conta? <Text style={styles.cadastrese}>Cadastre-se</Text></Text>
             </TouchableOpacity>
 
           </Animatable.View>
@@ -147,6 +147,10 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     color: '#ff375b',
     marginBottom: 8,
+  },
+  cadastrese: {
+    color: '#1e90ff',
+    fontWeight: 'bold'
   }
 
 })

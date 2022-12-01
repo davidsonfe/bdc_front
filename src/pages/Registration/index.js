@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView} from 'react-native'
 import {useState} from 'react'
 import * as Animatable from 'react-native-animatable'
 
@@ -8,22 +8,18 @@ import api from "../../services/api";
 export default function Registration(){
 
   React.useEffect(() => {
-
     api.get("usuarios").then((response) => {
       console.log(response.data);
-    }).catch((error) => {console.log(error)});
+    }).catch((error) => {
+      console.log(error)
+    });
 
   }, []);
-
 
   const [nome,setNome]=useState("")
   const [email,setEmail]=useState("")
   const [telefone,setTelefone]=useState("")
   const [senha,setSenha]=useState("")
-
-
-
-
 
   const handlerPost = async () => {
     await api
@@ -34,55 +30,54 @@ export default function Registration(){
         senha})
   };
 
-
   return (
       <View style={styles.container}>
           <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
             <Text style={styles.message}>Cadastre-se</Text>
           </Animatable.View>
 
+        <Animatable.View animation="fadeInUp" style={styles.containerForm} >
+          <ScrollView style={styles.scrollview} ke>
 
-          <Animatable.View animation="fadeInUp" style={styles.containerForm} >
-
-          <Text style={styles.title}>Nome</Text>
+            <Text style={styles.title}>Nome</Text>
             <TextInput
-            placeholder="Digite um Nome..."
-            style={styles.input}
-            value={nome}
-            onChangeText={setNome}
+              placeholder="Digite um Nome..."
+              style={styles.input}
+              value={nome}
+              onChangeText={setNome}
             />
 
             <Text style={styles.title}>Email</Text>
             <TextInput
-            placeholder="Digite um email..."
-            style={styles.input}
-            value={email}
-            onChangeText={setEmail}
+              placeholder="Digite um email..."
+              style={styles.input}
+              value={email}
+              onChangeText={setEmail}
             />
 
 
             <Text style={styles.title}>Telefone</Text>
             <TextInput
-            placeholder="Digite Seu Telefone..."
-            style={styles.input}
-            value={telefone}
-            onChangeText={setTelefone}
+              placeholder="Digite Seu Telefone..."
+              style={styles.input}
+              value={telefone}
+              onChangeText={setTelefone}
             />
 
             <Text style={styles.title}>Senha</Text>
             <TextInput
-            placeholder="Digite sua senha..."
-            style={styles.input}
-            value={senha}
-            onChangeText={setSenha}
+              placeholder="Digite sua senha..."
+              style={styles.input}
+              value={senha}
+              onChangeText={setSenha}
             />
 
             <TouchableOpacity style={styles.button} onPress={() => handlerPost()}>
               <Text style={styles.buttonText}>Cadastrar</Text>
             </TouchableOpacity>
 
-          </Animatable.View>
-
+          </ScrollView>
+        </Animatable.View>
       </View>
 
   );
@@ -145,6 +140,9 @@ const styles = StyleSheet.create({
   },
   registerText:{
     color: '#a1a1a1'
+  },
+  scrollview: {
+    marginBottom: 5
   }
 
 })

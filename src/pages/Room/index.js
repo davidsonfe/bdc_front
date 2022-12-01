@@ -31,7 +31,7 @@ export default function Room(){
             <View style={styleModal.centeredView}>
               <View style={styleModal.modalView}>
               <QRCode
-                value="http://awesome.link.ddszqr"
+                value="http://localhost?idRoom=15"
                 size={300}
               />
                 <TouchableOpacity>

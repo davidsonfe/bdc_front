@@ -6,6 +6,7 @@ import Registration from '../pages/Registration'
 import Home from '../pages/HomePage'
 import CreateRoom from '../pages/CreateRoom'
 import Room from '../pages/Room'
+import EntryRoom from '../pages/EntryRoom'
 
 const Stack = createNativeStackNavigator();
 
@@ -46,6 +47,12 @@ export default function Routes(){
             <Stack.Screen
               name="Room"
               component={Room}
+              options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+              name="EntryRoom"
+              component={EntryRoom}
               options={{ headerShown: false }}
             />
         </Stack.Navigator>

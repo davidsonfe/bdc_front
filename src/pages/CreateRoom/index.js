@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
 import { useNavigation } from '@react-navigation/native';
+import CheckBox from 'expo-checkbox';
 
 import * as Animatable from 'react-native-animatable'
 
 export default function CreateRoom(){
   const navigation = useNavigation();
+  const [isSelected, setSelection] = useState(false);
   return (
       <View style={styles.container}>
           <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
@@ -13,27 +15,35 @@ export default function CreateRoom(){
           </Animatable.View>
 
 
-          <Animatable.View animation="fadeInUp" style={styles.containerForm} >
+        <Animatable.View animation="fadeInUp" style={styles.containerForm} >
 
-          <Text style={styles.title}>Nome da Sala</Text>
+            <Text style={styles.title}>Nome da Sala</Text>
             <TextInput
-            placeholder="Digite um Nome da Sala..."
-            style={styles.input}
+              placeholder="Digite um Nome da Sala..."
+              style={styles.input}
             />
-
+      
             <Text style={styles.title}>Perímetro Permitido <Text style={styles.titleSub}>(m)</Text></Text>
             <TextInput
-            keyboardType='numeric'
-            placeholder="Digite o Perímetro..."
-            style={styles.input}
+              keyboardType='numeric'
+              placeholder="Digite o Perímetro..."
+              style={styles.input}
             />
+            <View style={styles.checkboxContainer}>
+              <CheckBox 
+                value={isSelected}
+                onValueChange={setSelection}
+                style={styles.checkbox}
+              />
+              <Text style={styles.label}>Notificação insistente?</Text>
+            </View>
 
             <TouchableOpacity style={styles.button}
               onPress={ () => navigation.navigate('Room') }>
                 <Text style={styles.buttonText}>Criar Sala</Text>
             </TouchableOpacity>
 
-          </Animatable.View>
+        </Animatable.View>
 
       </View>
 
@@ -100,6 +110,16 @@ const styles = StyleSheet.create({
   },
   titleSub: {
     fontSize: 14,
-  }
+  },
+  checkboxContainer: {
+    flexDirection: "row",
+    marginBottom: 20,
+  },
+  label: {
+    margin: 8,
+  },
+  checkbox: {
+    alignSelf: "center",
+  },
 
 })

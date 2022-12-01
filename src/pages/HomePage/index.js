@@ -17,12 +17,13 @@ export default function Home(){
 
         <Animatable.View animation="fadeInUp" style={styles.containerForm} >
           <View style={styles.main}>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button}
+                onPress={ () => navigation.navigate('EntryRoom') }>
               <Text style={styles.buttonText}>Entrar Sala</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button}
-              onPress={ () => navigation.navigate('CreateRoom') }>
-                <Text style={styles.buttonText}>Criar Sala</Text>
+                onPress={ () => navigation.navigate('CreateRoom') }>
+              <Text style={styles.buttonText}>Criar Sala</Text>
             </TouchableOpacity>
           </View>
         </Animatable.View>
