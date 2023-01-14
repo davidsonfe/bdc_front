@@ -3,6 +3,7 @@ import {Button, Dimensions, StyleSheet, TouchableOpacity, Text, View} from 'reac
 import { useNavigation } from '@react-navigation/native';
 import {BarCodeScanner, BarCodeScannerResult} from 'expo-barcode-scanner';
 import BarcodeMask from 'react-native-barcode-mask';
+import api from "../../services/api"; 
 
 const finderWidth = 280;
 const finderHeight = 230;
@@ -16,6 +17,16 @@ export default function EntryRoom() {
   const [type, setType] = useState(BarCodeScanner.Constants.Type.back);
   const [scanned, setScanned] = useState(false);
   const navigation = useNavigation();
+  const getUser = () =>{
+    return {
+      "email": "dudu_freitas@email.com",
+      "id": 3,
+      "nome": "Dudu Freitas",
+      "senha": "2233",
+      "telefone": "81 5555-4444",
+    };
+  };
+
   useEffect(() => {
     (async () => {
       const {status} = await BarCodeScanner.requestPermissionsAsync();
@@ -29,7 +40,20 @@ export default function EntryRoom() {
       const {x, y} = origin;
       if (x >= viewMinX && y >= viewMinY && x <= (viewMinX + finderWidth / 2) && y <= (viewMinY + finderHeight / 2)) {
         setScanned(true);
-        alert(`Codigo de barra escaneado: ${data}!`);
+        api.get("sala").then((response) => {
+          if(response.data[0].participantes.length < 1) {
+            let userEntry = getUser();
+            let sala = response.data[0];
+            sala.participantes.push(userEntry);
+            api.put("sala/" + sala.id, sala).then((response) => {
+            }).catch((error) => {
+              console.log(error)
+            });
+          }
+          navigation.navigate('Room');
+        }).catch((error) => {
+          console.log(error)
+        });
       }
     }
   };

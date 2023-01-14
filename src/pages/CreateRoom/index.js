@@ -2,12 +2,31 @@ import React, { useState } from 'react'
 import { View, Text, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import CheckBox from 'expo-checkbox';
+import api from "../../services/api";
 
 import * as Animatable from 'react-native-animatable'
 
 export default function CreateRoom(){
   const navigation = useNavigation();
-  const [isSelected, setSelection] = useState(false);
+
+  const [nome,setNome]=useState("")
+  const [perimetro,setPerimetro]=useState("")
+  const [notificacaoPersistente,setNotificacaoPersistente]=useState("")
+
+  const criarSala = async () => {
+    /*await api
+      .post("sala", {
+        nome,
+        perimetro,
+        notificacaoPersistente
+      }).then((response) => {
+        navigation.navigate('Room')
+      }).catch((error) => {
+        console.log(error)
+      });*/
+      navigation.navigate('Room')
+  };
+
   return (
       <View style={styles.container}>
           <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
@@ -21,6 +40,8 @@ export default function CreateRoom(){
             <TextInput
               placeholder="Digite um Nome da Sala..."
               style={styles.input}
+              value={nome}
+              onChangeText={setNome }
             />
       
             <Text style={styles.title}>Perímetro Permitido <Text style={styles.titleSub}>(m)</Text></Text>
@@ -28,12 +49,14 @@ export default function CreateRoom(){
               keyboardType='numeric'
               placeholder="Digite o Perímetro..."
               style={styles.input}
+              value={perimetro}
+              onChangeText={setPerimetro}
             />
             <View style={styles.checkboxContainer}>
               <CheckBox 
-                value={isSelected}
-                onValueChange={setSelection}
                 style={styles.checkbox}
+                value={notificacaoPersistente}
+                onValueChange={setNotificacaoPersistente}
               />
               <Text style={styles.label}>Notificação insistente?</Text>
             </View>

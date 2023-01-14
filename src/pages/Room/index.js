@@ -1,12 +1,48 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Modal, Pressable} from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Pressable, FlatList } from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
+import { useNavigation } from '@react-navigation/native';
 
 import * as Animatable from 'react-native-animatable'
 import { AntDesign } from '@expo/vector-icons';
 
+import api from "../../services/api";
+
 export default function Room(){
   const [modalVisible, setModalVisible] = useState(false);
+  const navigation = useNavigation();
+  var stopInterval = useNavigation();
+  const [participantes, setParticipantes] = useState([])
+
+  const listarParticipantes = function preencher() {
+    api.get("sala").then((response) => {
+      var participantesAux = [];
+      participantesAux.push(response.data[0].usuario);
+      response.data[0].participantes.forEach(participante => {
+        participantesAux.push(participante);
+      });
+      if(participantesAux.length !== participantes.length) {
+        setParticipantes(participantesAux);
+      }
+      console.log(participantes);
+    }).catch((error) => {
+      console.log(error)
+    });
+  };
+
+  useEffect(() => {
+    api.get("sala").then((response) => {
+      stopInterval = setInterval(() => {listarParticipantes()}, 500);
+    }).catch((error) => {
+      console.log(error)
+    });
+    const unsubscribe = navigation.addListener('beforeRemove', () => {
+      clearInterval(stopInterval);
+    });
+    return unsubscribe;
+  }, []);
+
+
   return (
       <View style={styles.container}>
           <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
@@ -31,7 +67,7 @@ export default function Room(){
             <View style={styleModal.centeredView}>
               <View style={styleModal.modalView}>
               <QRCode
-                value="http://localhost?idRoom=15"
+                value="{id: 1}"
                 size={300}
               />
                 <TouchableOpacity>
@@ -43,8 +79,16 @@ export default function Room(){
 
 
           <Animatable.View animation="fadeInUp" style={styles.containerForm} >
-
-
+          <Text style={styles.tituloParticipantes}>Participantes</Text>
+            <FlatList
+              keyExtractor = {item => item.id}  
+              data={participantes}
+              renderItem = {item => (
+                <View style={styles.card}>
+                  <Text style={styles.cardText}>
+                    {item.item.nome}
+                  </Text>
+                </View>)} />
           </Animatable.View>
 
       </View>
@@ -79,7 +123,8 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     paddingStart: '5%',
     paddingEnd: '5%',
-
+    paddingTop: '5%',
+    width: '100%'
   },
 
   title: {
@@ -121,6 +166,33 @@ const styles = StyleSheet.create({
   qrcode: {
     color: 'white'
   },
+  card: {
+    width: '99%',
+    backgroundColor: '#ebebeb',
+    padding: 25,
+    marginTop: '2%',
+    margin: '1%',
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 1,
+      height: 1,
+    },
+    shadowOpacity: 0.20,
+    shadowRadius: 1.41,
+    elevation: 2,
+  },
+  tituloParticipantes: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: {width: 1, height: 1},
+    textShadowRadius: 1
+  },
+  cardText: {
+    
+  }
 
 })
 

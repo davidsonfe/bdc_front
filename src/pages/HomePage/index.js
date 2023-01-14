@@ -12,7 +12,7 @@ export default function Home(){
   return (
     <View style={styles.container}>
         <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
-          <Text style={styles.message}>Bem Vindo, Luiz</Text>
+          <Text style={styles.message}>Bem Vindo, Dudu</Text>
         </Animatable.View>
 
         <Animatable.View animation="fadeInUp" style={styles.containerForm} >
