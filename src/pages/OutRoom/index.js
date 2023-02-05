@@ -4,6 +4,7 @@ import * as Animatable from "react-native-animatable";
 import { AntDesign } from "@expo/vector-icons";
 import * as Location from 'expo-location';
 import MapView, {Marker, Circle} from 'react-native-maps';
+import { Audio } from 'expo-av';
 
 import api from "../../services/api";
 
@@ -31,8 +32,20 @@ export default function OutRoom () {
     console.log(location.coords.latitude, location.coords.longitude);
   }
 
+  const loadSoundAsync = async () => { 
+    const soundObject = new Audio.Sound(); 
+    try { 
+      await soundObject.loadAsync(require('../../assents/sound/alarm.mp3')); // Play the sound file 
+      soundObject.playAsync(); 
+    } catch (error) { 
+      console.log(error); 
+    } 
+  }
+
   useEffect(() => {
+    
     userLocation();
+    loadSoundAsync();
 
     Vibration.vibrate(10000); // Vibração,
   }, []);
