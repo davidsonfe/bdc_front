@@ -8,6 +8,8 @@ import CreateRoom from '../pages/CreateRoom'
 import Room from '../pages/Room'
 import EntryRoom from '../pages/EntryRoom'
 import Maps from '../pages/Maps'
+import StartRoom from '../pages/StartRoom'
+import OutRoom from '../pages/OutRoom'
 
 const Stack = createNativeStackNavigator();
 
@@ -60,6 +62,17 @@ export default function Routes(){
             <Stack.Screen
               name="Maps"
               component={Maps}
+              options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+              name="StartRoom"
+              component={StartRoom}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="OutRoom"
+              component={OutRoom}
               options={{ headerShown: false }}
             />
         </Stack.Navigator>

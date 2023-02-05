@@ -56,7 +56,6 @@ const styles = StyleSheet.create({
     paddingStart: '5%',
     paddingEnd: '5%', 
     paddingBottom: '5%'
-
   },
 
   title: {

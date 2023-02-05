@@ -2,14 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Pressable, FlatList } from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import { useNavigation } from '@react-navigation/native';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Modal,
-  Pressable,
-} from "react-native";
 import * as Animatable from "react-native-animatable";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -52,91 +44,75 @@ export default function Room() {
 
   return (
     <View style={styles.container}>
+      {/* CABEÇALHO PAGINA - INICIO */}
       <Animatable.View
         animation="fadeInLeft"
         delay={500}
-        style={styles.containerHeader}
-      >
-        <Text style={styles.message}>
-          Calourada IFPE
-          <Text style={styles.titleSub}> (50m)</Text>
-        </Text>
-        <TouchableOpacity>
-          <AntDesign
-            name="qrcode"
-            size={40}
-            style={styles.qrcode}
-            onPress={() => setModalVisible(true)}
-          />
-        </TouchableOpacity>
+        style={styles.containerHeader}>
+          <Text style={styles.message}>
+            Calourada IFPE
+            <Text style={styles.titleSub}> (50m)</Text>
+          </Text>
+          <TouchableOpacity>
+            <AntDesign
+              name="qrcode"
+              size={40}
+              style={styles.qrcode}
+              onPress={() => setModalVisible(true)}
+            />
+          </TouchableOpacity>
       </Animatable.View>
-
-      {/* Modal para mostrar QR_CODE */}
+      {/* CABEÇALHO PAGINA - FIM */}
+      {/* Modal para mostrar QR_CODE - INICIO */}
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
+        Alert.alert("Modal has been closed.");
+        setModalVisible(!modalVisible);
+      }}>
         <View style={styleModal.centeredView}>
-          <Animatable.View style={styleModal.modalView}>
-            <QRCode value="http://localhost?idRoom=15" size={300} />
+          <View style={styleModal.modalView}>
+          <QRCode
+            value="{id: 1}"
+            size={300}
+          />
             <TouchableOpacity>
-              <AntDesign name="qrcode" size={40} style={styles.qrcode} onPress={() => setModalVisible(true)}/>
+              <AntDesign name="closecircle" style={styleModal.closecircle} size={30} onPress={() => setModalVisible(!modalVisible)}/>
             </TouchableOpacity>
-          </Animatable.View>
-
-          {/* Modal para mostrar QR_CODE */}
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
-          }}>
-            <View style={styleModal.centeredView}>
-              <View style={styleModal.modalView}>
-              <QRCode
-                value="{id: 1}"
-                size={300}
-              />
-                <TouchableOpacity>
-                  <AntDesign name="closecircle" style={styleModal.closecircle} size={30} onPress={() => setModalVisible(!modalVisible)}/>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-
-
-          <Animatable.View animation="fadeInUp" style={styles.containerForm} >
-          <Text style={styles.tituloParticipantes}>Participantes</Text>
-            <FlatList
-              keyExtractor = {item => item.id}  
-              data={participantes}
-              renderItem = {item => (
-                <View style={styles.card}>
-                  <Text style={styles.cardText}>
-                    {item.item.nome}
-                  </Text>
-                </View>)} />
-          </Animatable.View>
-
-      </View>
-
-      <Animatable.View
-        animation="fadeInUp"
-        style={styles.containerForm}
-      ></Animatable.View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("Maps")}
-      >
-        <Text style={styles.buttonText}>Loc_Usuario</Text>
-      </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      {/* Modal para mostrar QR_CODE - FIM*/}
+      {/* Lista dos Participantes - INICIO */}
+      <Animatable.View animation="fadeInUp" style={styles.containerForm} >
+        <Text style={styles.tituloParticipantes}>Participantes</Text>
+          <FlatList
+            keyExtractor = {item => item.id}  
+            data={participantes}
+            renderItem = {item => (
+              <View style={styles.card}>
+                <Text style={styles.cardText}>
+                  {item.item.nome}
+                </Text>
+              </View>)} />
+      </Animatable.View>
+      {/* Lista dos Participantes - FIM */}
+      {/* Mostrar Localização do Usuário - INICIO*/}
+      <Animatable.View animation="fadeInUp">
+        {/* <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Maps")}
+        >
+          <Text style={styles.buttonText}>Loc_Usuario</Text>
+        </TouchableOpacity> */}
+        <TouchableOpacity style={styles.button}
+          onPress={ () => navigation.navigate('OutRoom') }>
+            <Text style={styles.buttonText}>Iniciar Sala</Text>
+        </TouchableOpacity>
+      </Animatable.View>
+      {/* Mostrar Localização do Usuário - FIM*/}
     </View>
   );
 }
@@ -247,9 +223,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 1
   },
   cardText: {
-    
-  }
-
+  },
   buttonText: {
     fontWeight: 18,
     color: "#FFF",
