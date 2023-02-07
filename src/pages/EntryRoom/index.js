@@ -3,7 +3,8 @@ import {Button, Dimensions, StyleSheet, TouchableOpacity, Text, View} from 'reac
 import { useNavigation } from '@react-navigation/native';
 import {BarCodeScanner, BarCodeScannerResult} from 'expo-barcode-scanner';
 import BarcodeMask from 'react-native-barcode-mask';
-import api from "../../services/api"; 
+import api from "../../services/api";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const finderWidth = 280;
 const finderHeight = 230;
@@ -16,6 +17,9 @@ export default function EntryRoom() {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(BarCodeScanner.Constants.Type.back);
   const [scanned, setScanned] = useState(false);
+  const [user,setUser]=useState("")
+  const [room,setRoom]=useState("")
+  
   const navigation = useNavigation();
   const getUser = () =>{
     return {
@@ -31,6 +35,8 @@ export default function EntryRoom() {
     (async () => {
       const {status} = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === 'granted');
+      const usr = await AsyncStorage.getItem('user');
+      setUser(JSON.parse(usr));
     })();
   }, []);
 
@@ -40,17 +46,17 @@ export default function EntryRoom() {
       const {x, y} = origin;
       if (x >= viewMinX && y >= viewMinY && x <= (viewMinX + finderWidth / 2) && y <= (viewMinY + finderHeight / 2)) {
         setScanned(true);
-        api.get("sala").then((response) => {
-          if(response.data[0].participantes.length < 1) {
-            let userEntry = getUser();
-            let sala = response.data[0];
-            sala.participantes.push(userEntry);
-            api.put("sala/" + sala.id, sala).then((response) => {
+        api.get("sala/" + data).then(async (response) => {
+            console.log(response);
+            let sala = response.data;
+            await AsyncStorage.setItem('room', JSON.stringify(sala));
+            sala.participantes.push(user);
+            console.log(sala);
+            api.put("sala/" + data, sala).then((resp) => {
+              navigation.navigate('Room');
             }).catch((error) => {
               console.log(error)
             });
-          }
-          navigation.navigate('Room');
         }).catch((error) => {
           console.log(error)
         });

@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import CheckBox from 'expo-checkbox';
 import api from "../../services/api";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Location from 'expo-location';
 
 import * as Animatable from 'react-native-animatable'
 
@@ -12,20 +14,41 @@ export default function CreateRoom(){
   const [nome,setNome]=useState("")
   const [perimetro,setPerimetro]=useState("")
   const [notificacaoPersistente,setNotificacaoPersistente]=useState("")
+  const [user,setUser]=useState("")
+  const [location,setLocation]=useState({})
 
   const criarSala = async () => {
-    /*await api
-      .post("sala", {
-        nome,
-        perimetro,
-        notificacaoPersistente
-      }).then((response) => {
-        navigation.navigate('Room')
-      }).catch((error) => {
-        console.log(error)
-      });*/
+    let salaCriada = {
+      nome: nome,
+      perimetro: perimetro,
+      notificacaoPersistente: notificacaoPersistente,
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      usuario: user
+    }
+    api.post("sala", salaCriada).then( async (response) => {
+      await AsyncStorage.setItem('room', JSON.stringify(response.data));
       navigation.navigate('Room')
+    }).catch((error) => {
+      console.log(error)
+    });
   };
+
+  const userLocation = async () => {
+    let {status} = await Location.requestForegroundPermissionsAsync();
+    if(status !== 'granted'){
+      setError('Permission to access location was denied');
+    }
+    setLocation(await Location.getCurrentPositionAsync({enableHighAccuracy: true}));
+  }
+
+  useEffect(() => {
+    userLocation();
+    (async () => {
+      const usr = await AsyncStorage.getItem('user');
+      setUser(JSON.parse(usr));
+    })();
+  }, []);
 
   return (
       <View style={styles.container}>
@@ -62,7 +85,7 @@ export default function CreateRoom(){
             </View>
 
             <TouchableOpacity style={styles.button}
-              onPress={ () => navigation.navigate('Room') }>
+              onPress={ () => criarSala() }>
                 <Text style={styles.buttonText}>Criar Sala</Text>
             </TouchableOpacity>
 

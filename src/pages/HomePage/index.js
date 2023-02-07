@@ -1,18 +1,28 @@
-import React from 'react'
+import React, {useEffect, useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity} from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-
 import * as Animatable from 'react-native-animatable'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 
 export default function Home(){
   const navigation = useNavigation();
+  const [user,setUser]=useState("")
+
+  useEffect(() => {
+    (async () => {
+      const usr = await AsyncStorage.getItem('user');
+      setUser(JSON.parse(usr));
+    })();
+  }, []);
+
+
   return (
     <View style={styles.container}>
         <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
-          <Text style={styles.message}>Bem Vindo, Dudu</Text>
+          <Text style={styles.message}>Bem Vindo, {user.nome}</Text>
         </Animatable.View>
 
         <Animatable.View animation="fadeInUp" style={styles.containerForm} >

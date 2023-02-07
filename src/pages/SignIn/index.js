@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Animatable from 'react-native-animatable'
 import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup'
+import api from "../../services/api";
 
 const schema = yup.object({
   email: yup.string().email("Email Invalido").required("Informe seu Email!"),
@@ -15,13 +16,20 @@ const schema = yup.object({
 
 export default function SignIn(){
   const navigation = useNavigation();
+  const [email,setEmail]=useState("")
+  const [senha,setSenha]=useState("")
 
   const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema)
   })
 
-  function handleSignIn(data){
-    console.log(data);
+  const logIn = async () => {
+    await api.get("usuarios/" + email).then(async (response) => {
+      await AsyncStorage.setItem('user', JSON.stringify(response.data));
+      navigation.navigate('Home')
+    }).catch((error) => {
+      console.log(error)
+    });
   }
 
   return (
@@ -33,6 +41,7 @@ export default function SignIn(){
           <Animatable.View animation="fadeInUp" style={styles.containerForm} >
             <Text style={styles.title}>Login</Text>
 
+            
             <Controller
               control={control}
               name="email"
@@ -40,9 +49,9 @@ export default function SignIn(){
                 <TextInput
                   placeholder="Digite um email..."
                   style={styles.input}
-                  onChangeText={onChange}
+                  onChangeText={setEmail}
                   onBlur={onBlur}
-                  value={value}
+                  value={email}
                 />
               )}
 
@@ -57,9 +66,9 @@ export default function SignIn(){
                   placeholder="Digite uma senha..."
                   secureTextEntry={true}
                   style={styles.input}
-                  onChangeText={onChange}
+                  onChangeText={setSenha}
                   onBlur={onBlur}
-                  value={value}
+                  value={senha}
                 />
               )}
 
@@ -67,8 +76,7 @@ export default function SignIn(){
             {errors.password && <Text style={styles.labelError}>{errors.password?.message}</Text>}
 
             <TouchableOpacity style={styles.button}
-            // onPress={ handleSubmit(handleSignIn)}>
-            onPress={ () => navigation.navigate('Home')}>
+            onPress={ () => logIn() }>
               <Text style={styles.buttonText}>Acessar</Text>
             </TouchableOpacity>
 

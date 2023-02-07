@@ -5,11 +5,13 @@ import { AntDesign } from "@expo/vector-icons";
 import * as Location from 'expo-location';
 import MapView, {Marker, Circle} from 'react-native-maps';
 import { Audio } from 'expo-av';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import api from "../../services/api";
 
 export default function OutRoom () {
 
+  const [user,setUser]=useState("")
   const [mapRegion, setMapRegion] = useState({
     latitude: -8.041853,
     longitude: -34.876459,
@@ -43,7 +45,10 @@ export default function OutRoom () {
   }
 
   useEffect(() => {
-    
+    (async () => {
+      const usr = await AsyncStorage.getItem('user');
+      setUser(JSON.parse(usr));
+    })();
     userLocation();
     loadSoundAsync();
 

@@ -4,10 +4,21 @@ import QRCode from 'react-native-qrcode-svg'
 import { useNavigation } from '@react-navigation/native';
 import * as Animatable from "react-native-animatable";
 import { AntDesign } from "@expo/vector-icons";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import api from "../../services/api";
 
 export default function StartRoom () {
+
+  const [user,setUser]=useState("")
+
+  useEffect(() => {
+    (async () => {
+      const usr = await AsyncStorage.getItem('user');
+      setUser(JSON.parse(usr));
+    })();
+  }, []);
+
 
   return (
     <View style={styles.container}>

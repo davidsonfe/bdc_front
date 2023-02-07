@@ -4,6 +4,7 @@ import QRCode from 'react-native-qrcode-svg'
 import { useNavigation } from '@react-navigation/native';
 import * as Animatable from "react-native-animatable";
 import { AntDesign } from "@expo/vector-icons";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import api from "../../services/api";
 
@@ -12,33 +13,37 @@ export default function Room() {
   const [modalVisible, setModalVisible] = useState(false);
   var stopInterval = useNavigation();
   const [participantes, setParticipantes] = useState([])
+  const [user,setUser]=useState("")
+  const [room, setRoom]=useState("")
 
-  const listarParticipantes = function preencher() {
-    api.get("sala").then((response) => {
+  const listarParticipantes = (sala) => {
+    api.get("sala/" + sala.id).then((response) => {
       var participantesAux = [];
-      participantesAux.push(response.data[0].usuario);
-      response.data[0].participantes.forEach(participante => {
+      response.data.participantes.forEach(participante => {
         participantesAux.push(participante);
       });
       if(participantesAux.length !== participantes.length) {
         setParticipantes(participantesAux);
       }
-      console.log(participantes);
+      console.log(response.data);
     }).catch((error) => {
       console.log(error)
     });
   };
 
   useEffect(() => {
-    api.get("sala").then((response) => {
-      stopInterval = setInterval(() => {listarParticipantes()}, 500);
-    }).catch((error) => {
-      console.log(error)
-    });
-    const unsubscribe = navigation.addListener('beforeRemove', () => {
-      clearInterval(stopInterval);
-    });
-    return unsubscribe;
+    (async () => {
+      const usr = await AsyncStorage.getItem('user');
+      setUser(JSON.parse(usr));
+      const sala = await AsyncStorage.getItem('room');
+      setRoom(JSON.parse(sala));
+
+      stopInterval = setInterval(() => {listarParticipantes(JSON.parse(sala))}, 500);
+
+      const unsubscribe = navigation.addListener('beforeRemove', () => {
+        clearInterval(stopInterval);
+      });
+    })();
   }, []);
 
 
@@ -50,8 +55,8 @@ export default function Room() {
         delay={500}
         style={styles.containerHeader}>
           <Text style={styles.message}>
-            Calourada IFPE
-            <Text style={styles.titleSub}> (50m)</Text>
+            {room.nome}
+            <Text style={styles.titleSub}> ({room.perimetro}m)</Text>
           </Text>
           <TouchableOpacity>
             <AntDesign
@@ -75,7 +80,7 @@ export default function Room() {
         <View style={styleModal.centeredView}>
           <View style={styleModal.modalView}>
           <QRCode
-            value="{id: 1}"
+            value={room.id + ""}
             size={300}
           />
             <TouchableOpacity>
@@ -89,7 +94,7 @@ export default function Room() {
       <Animatable.View animation="fadeInUp" style={styles.containerForm} >
         <Text style={styles.tituloParticipantes}>Participantes</Text>
           <FlatList
-            keyExtractor = {item => item.id}  
+            keyExtractor = {item => item.id}
             data={participantes}
             renderItem = {item => (
               <View style={styles.card}>
@@ -101,17 +106,12 @@ export default function Room() {
       {/* Lista dos Participantes - FIM */}
       {/* Mostrar Localização do Usuário - INICIO*/}
       <Animatable.View animation="fadeInUp">
-        {/* <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Maps")}
-        >
-          <Text style={styles.buttonText}>Loc_Usuario</Text>
-        </TouchableOpacity> */}
+      {false ? 
         <TouchableOpacity style={styles.button}
-          onPress={ () => navigation.navigate('OutRoom') }>
+          onPress={ () => navigation.navigate('EntryRoom') }>
             <Text style={styles.buttonText}>Iniciar Sala</Text>
-        </TouchableOpacity>
-      </Animatable.View>
+        </TouchableOpacity>: null}
+      </Animatable.View> 
       {/* Mostrar Localização do Usuário - FIM*/}
     </View>
   );
