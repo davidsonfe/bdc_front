@@ -18,20 +18,22 @@ export default function CreateRoom(){
   const [location,setLocation]=useState({})
 
   const criarSala = async () => {
-    let salaCriada = {
-      nome: nome,
-      perimetro: perimetro,
-      notificacaoPersistente: notificacaoPersistente,
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-      usuario: user
+    if(location && location.coords) {
+      let salaCriada = {
+        nome: nome,
+        perimetro: perimetro,
+        notificacaoPersistente: notificacaoPersistente,
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        usuario: user
+      }
+      api.post("sala", salaCriada).then( async (response) => {
+        await AsyncStorage.setItem('room', JSON.stringify(response.data));
+        navigation.navigate('Room')
+      }).catch((error) => {
+        console.log(error)
+      });
     }
-    api.post("sala", salaCriada).then( async (response) => {
-      await AsyncStorage.setItem('room', JSON.stringify(response.data));
-      navigation.navigate('Room')
-    }).catch((error) => {
-      console.log(error)
-    });
   };
 
   const userLocation = async () => {
@@ -39,7 +41,8 @@ export default function CreateRoom(){
     if(status !== 'granted'){
       setError('Permission to access location was denied');
     }
-    setLocation(await Location.getCurrentPositionAsync({enableHighAccuracy: true}));
+    let location = await Location.getCurrentPositionAsync({});
+    setLocation(location);
   }
 
   useEffect(() => {

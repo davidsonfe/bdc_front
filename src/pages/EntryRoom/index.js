@@ -21,15 +21,6 @@ export default function EntryRoom() {
   const [room,setRoom]=useState("")
   
   const navigation = useNavigation();
-  const getUser = () =>{
-    return {
-      "email": "dudu_freitas@email.com",
-      "id": 3,
-      "nome": "Dudu Freitas",
-      "senha": "2233",
-      "telefone": "81 5555-4444",
-    };
-  };
 
   useEffect(() => {
     (async () => {
@@ -47,11 +38,9 @@ export default function EntryRoom() {
       if (x >= viewMinX && y >= viewMinY && x <= (viewMinX + finderWidth / 2) && y <= (viewMinY + finderHeight / 2)) {
         setScanned(true);
         api.get("sala/" + data).then(async (response) => {
-            console.log(response);
             let sala = response.data;
             await AsyncStorage.setItem('room', JSON.stringify(sala));
             sala.participantes.push(user);
-            console.log(sala);
             api.put("sala/" + data, sala).then((resp) => {
               navigation.navigate('Room');
             }).catch((error) => {

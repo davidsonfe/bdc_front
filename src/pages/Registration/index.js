@@ -2,14 +2,15 @@ import React from 'react'
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView} from 'react-native'
 import {useState} from 'react'
 import * as Animatable from 'react-native-animatable'
+import { useNavigation } from '@react-navigation/native';
 
 import api from "../../services/api";
 
 export default function Registration(){
+  const navigation = useNavigation();
 
   React.useEffect(() => {
     api.get("usuarios").then((response) => {
-      console.log(response.data);
     }).catch((error) => {
       console.log(error)
     });
@@ -22,12 +23,18 @@ export default function Registration(){
   const [senha,setSenha]=useState("")
 
   const handlerPost = async () => {
-    await api
-      .post("usuarios", {
-        nome,
-        email,
-        telefone,
-        senha})
+    let usuario = {
+      nome: nome,
+      email: email,
+      telefone: telefone,
+      senha: senha,
+    }
+
+    api.post("usuarios", usuario).then( async (response) => {
+      navigation.navigate('SignIn')
+    }).catch((error) => {
+      console.log(error)
+    });
   };
 
   return (
@@ -69,6 +76,7 @@ export default function Registration(){
               placeholder="Digite sua senha..."
               style={styles.input}
               value={senha}
+              secureTextEntry={true}
               onChangeText={setSenha}
             />
 

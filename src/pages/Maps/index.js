@@ -23,7 +23,6 @@ export default function App() {
       latitudeDelta: 0.00922,
       longitudeDelta: 0.00421,
     });
-    console.log(location.coords.latitude, location.coords.longitude);
   }
 
   useEffect(() => {

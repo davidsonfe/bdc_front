@@ -24,9 +24,15 @@ export default function SignIn(){
   })
 
   const logIn = async () => {
-    await api.get("usuarios/" + email).then(async (response) => {
-      await AsyncStorage.setItem('user', JSON.stringify(response.data));
-      navigation.navigate('Home')
+    let login = {
+      email: email,
+      senha: senha
+    }
+    await api.post("usuarios/login", login).then(async (response) => {
+      if(response.data || (response.data.length > 0)) {
+        await AsyncStorage.setItem('user', JSON.stringify(response.data));
+        navigation.navigate('Home')
+      }
     }).catch((error) => {
       console.log(error)
     });
