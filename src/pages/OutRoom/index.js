@@ -276,7 +276,6 @@ const styles = StyleSheet.create({
   main: {
     width: '100%',
     flexDirection: 'row',
-    backgroundColor: 'red',
     alignItems: 'center',
   },
   map: {
